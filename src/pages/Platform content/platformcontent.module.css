@@ -1,0 +1,80 @@
+  .test {
+    background-color: var(--hero);
+    direction: rtl;
+  }
+  @media (width < 760px) {
+    .right_PlatformContent {
+      padding-top: 0px;
+      margin: 1.5rem 2rem 0 0;
+    }
+  }
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .right_PlatformContent {
+      margin: 1rem 1rem 0 0;
+    }
+  }
+  .heading_PlatformContent {
+    color: var(--title);
+    font-size: 50px;
+    font-weight: 700;
+    width: 500px;
+    line-height: 80px;
+  }
+  @media (width < 760px) {
+    .heading_PlatformContent {
+      font-size: 33px;
+      width: 350px;
+      line-height: 50px;
+    }
+  }
+  .span {
+    color: rgba(242, 106, 64, 1);
+  }
+  .platform_Content {
+    width: 566px;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--subtitle);
+  }
+  @media (width < 760px) {
+    .platform_Content {
+      width: 320px;
+      font-size: 15px;
+    }
+  }
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .platform_Content {
+      width: 400px;
+    }
+  }
+  .omar {
+    position: absolute;
+    bottom: 1%;
+    left: 10%;
+  }
+  @media (width < 760px) {
+    .omar {
+      left: 0;
+       bottom: -25%;
+    }
+  }
+  @media only screen and (min-width: 768px) and (max-width: 1280px) {
+    .omar{
+      left: 1%;
+      bottom: -170px;
+    }
+}
+   /* Rresponsive */
+  @media only screen and (max-width: 600px) {
+    .apple_photo,
+    .arrow_photo,
+    .atom_photo,
+    .dash_photo,
+    .samllatom_photo,
+    .right_dots,
+    .left_dots {
+      display: none;
+    }
+  }
+
+   

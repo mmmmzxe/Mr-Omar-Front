@@ -1,0 +1,13 @@
+.pricing_section {
+  background: linear-gradient(#212245b2, #212245b2),
+  url("../../assets/payment.webp");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding: 200px 0px;
+}
+@media only screen and (max-width: 768px) {
+  .pricing_section {
+    padding: 120px 0px;
+  }
+}

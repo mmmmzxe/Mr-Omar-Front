@@ -1,0 +1,106 @@
+/* start lesson */
+.lesson {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+    gap: 40px;
+}
+.lesson_box {
+    box-shadow: 0 2px 15px rgb(0 0 0 /10%);
+    overflow: hidden;
+    transition: transform 0.3s , box-shadow 0.3s ;
+}
+.lesson_box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 2px 15px rgb(0 0 0 /20%);
+}
+.lesson_details {
+    direction: rtl;
+    margin-top: 25px;
+}
+
+/* End lesson */
+
+/* start main title */
+.main_title::before,
+.main_title::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background-color: #f26a40;
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.main_title::before {
+  left: -30px;
+}
+.main_title::after {
+  right: -30px;
+}
+.main_title:hover::before {
+  z-index: -1;
+  animation: left-move 0.5s linear forwards;
+}
+.main_title:hover::after {
+  z-index: -1;
+  animation: right-move 0.5s linear forwards;
+}
+.main_title:hover {
+  color: white;
+  border: 2px solid white;
+  transition-delay: 0.5s;
+}
+@keyframes left-move {
+    50% {
+        left: 0;
+        height: 12px;
+        width: 12px;
+    }
+    100% {
+        left: 0;
+        border-radius: 0;
+        width: 50%;
+        height: 100%;
+    }
+}
+@keyframes right-move {
+    50% {
+        height: 12px;
+        width: 12px;
+        right: 0;
+    }
+    100% {
+        width: 50%;
+        height: 100%;
+        right: 0;
+        border-radius: 0;
+    }
+}
+/* End main title */
+iframe {
+  width: 1000px; /* لجعل الـ iframe يملأ العرض بالكامل */
+  height: 600px;
+  margin: 0px 0px 0px 30px;
+}
+@media (width < 768px) {
+  iframe {
+  width: 320px;  
+  height: 300px;
+  margin: 0px 0px 0px -15px;
+}
+}
+@media only screen and (min-width: 768px) and (max-width: 1200px) {
+  iframe {
+  width: 600px;  
+  height: 400px;
+  margin: 0px 0px 0px 20px;
+}
+}
+@media only screen and (min-width: 1200px) and (max-width: 1500px) {
+  iframe {
+    width: 800px;
+    height: 500px;
+    margin: 0px 0px 0px 60px;
+  }
+}

@@ -1,0 +1,114 @@
+.login {
+    padding: 3rem 0;
+    direction: rtl;
+}
+@media (max-width:767px) {
+    .login {
+        padding: 0rem ;
+    }  
+}
+.container_login {
+    width: auto;
+    max-width: 1320px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    background-color: var(--secondary);
+}
+@media only screen and (min-width: 850px) and (max-width: 1280px) {
+    .container_login {
+      --container-padding: 1.7rem;
+      width: 90%;
+      padding: 0 var(--container-padding);
+    }
+}
+.login_wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    
+
+    @media (max-width:992px) {
+        justify-content: center;
+    }
+
+    @media (max-width:767px) {
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+}
+@media (max-width:767px) {
+    .login_wrapper {
+        margin: 0rem ;
+    }
+    
+}
+.right img {
+    border-radius: 2.1429rem;
+    position: relative;
+    z-index: 2;
+    max-width: 85%;
+    margin: 3rem 1rem 3rem 2rem;
+}
+@media (max-width:767px) {
+    .right img {
+        margin: 2rem 1rem 1rem 2rem;
+    } 
+}
+.left {
+    width: calc(100% / 2 - 1rem);
+    padding: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0px 20px 40px 0px rgba(0, 0, 0, 0.07);
+    margin: 3rem 0rem 3rem 1rem;
+
+    @media (max-width:992px) {
+        width: 50%
+    }
+
+    @media (max-width:767px) {
+        width: 100%;
+    }
+}
+ 
+.input_wrapper {
+    width: 100%;
+    display: flex;
+
+    .form_control {
+        width: 100%;
+        background-color: transparent;
+        border: .0714rem solid var(--title);
+        color: var(--title);
+        font-size: 1.0714rem;
+        font-weight: 400;
+        padding: .7143rem 1.4286rem;
+        border-radius: .5714rem;
+        margin-bottom: 2rem;
+    }
+
+    .form_control:hover,
+    .form_control:focus {
+        border-color: #f26a40;
+        color: #f26a40;
+    }
+}
+.radio {
+    border: 1px solid rgba(241, 100, 55, 1);
+}
+.radio[type="radio"]:before {
+    content: "";
+    display: block;
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    margin: 1px;
+    padding: 1px;
+  }
+  .radio[type="radio"]:checked:before {
+    background: rgba(241, 100, 55, 1);
+  }
+.btn_wrapper {
+    margin-top: 2rem;
+}

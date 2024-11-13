@@ -1,0 +1,5 @@
+.footer_component {
+    border-top: 1px solid var(--border);
+    display: block;
+    text-align: center;
+}
