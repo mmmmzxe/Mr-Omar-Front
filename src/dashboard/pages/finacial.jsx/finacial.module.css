@@ -1,0 +1,162 @@
+.container {
+    display: flex;
+    margin-top: 3rem;
+  }
+  .main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .statsitc {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .card {
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.05);
+    width: 205px;
+    height: 140px;
+    border: 1px solid rgba(144, 144, 144, 0.5);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding-right: 10px;
+    text-align: center;
+  }
+  .content {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(92, 93, 95, 1);
+  }
+  .numbers {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--title);
+  }
+  
+  .secoundrow {
+    display: flex;
+    height: 45px;
+    align-items: center;
+    gap: 16px;
+    margin-right: 3rem;
+  }
+  .input_container {
+    padding: 10px 16px;
+    height: 45px;
+    border: 1px solid rgba(144, 144, 144, 1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    width: 50%;
+  }
+  .input {
+    width: 100%;
+    outline: none;
+    border-radius: 10px;
+    border: none;
+  }
+  .select_container {
+    width: 66%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .selected_history,
+  .selected_payments,
+  .selected {
+    gap: 8px;
+    width: 130px;
+    height: 42px;
+    padding: 4px 12px;
+    background-color: rgba(170, 190, 209, 0.2);
+    border-radius: 10px;
+    color: var(--title);
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='rgb(107, 114, 128)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 4px center;
+    outline: none;
+    border: none;
+  }
+  
+  .selected_history > option,
+  .selected_payments > option,
+  .selected > option {
+    background-color: rgba(170, 190, 209, 0.2);
+    font-size: 14px;
+    font-family: "Cairo";
+    border-radius: 10px;
+  }
+  .selected_history {
+    width: 90px;
+  }
+  .selected_payments {
+    width: 120px;
+  }
+  
+  .downpart {
+    margin-right: 3rem;
+  }
+  
+  .table {
+    position: relative;
+    margin-top: 1rem;
+    border-collapse: collapse;
+    border: 1px solid rgba(144, 144, 144, 0.5);
+    width: 90%;
+  }
+  .th {
+    border: 1px solid rgba(144, 144, 144, 0.5);
+    padding: 12px;
+    background-color: rgba(241, 100, 55, 0.2);
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .td {
+    border: 1px solid rgba(144, 144, 144, 0.5);
+    text-align: center;
+    padding: 10px;
+  }
+  .controll {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  .lastrow {
+    width: 900px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 3rem;
+  }
+  .sapn,
+  .notification {
+    font-size: 24px;
+    font-weight: 400;
+    font-family: "Cairo";
+  }
+  .sapn {
+    color: rgba(241, 100, 55, 1);
+  }
+  .Pagination {
+    direction: ltr;
+    margin-left: 9rem;
+     
+  }
+  

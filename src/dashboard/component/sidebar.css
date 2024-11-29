@@ -1,0 +1,27 @@
+.home_title::before,
+.home_title::after {
+  content: "";
+  height: 3px;
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+}
+.home_title::before {
+  background-color: white;
+  width: 120px;
+}
+@media (max-width: 767px) {
+  .home_title::before {
+    width: 60px;
+  }
+}
+.home_title::after {
+  background-color: #f26a40;
+  width: 40px;
+}
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background-color: rgba(241, 100, 55, 0.2);
+  color: var(--title);
+}
+ 

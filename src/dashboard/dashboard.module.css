@@ -1,0 +1,76 @@
+.dashboard {
+    direction: rtl;
+}
+@media (max-width: 1024px) {
+  .dashboard {
+    width: fit-content;
+}
+}
+.header_Dashboard {
+  direction: rtl;
+}
+.draw_Dashboard {
+    direction: ltr;
+}
+.overview_Dashboad {
+    display: grid;
+          grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+          gap: 40px;     
+}
+ 
+  .card {
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.05);
+    height: 140px;
+    border: 1px solid rgba(144, 144, 144, 0.5);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+     
+     
+  }
+  .content {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(92, 93, 95, 1);
+    text-align: center;
+  }
+  .numbers {
+    font-size: 24px;
+    font-weight: 700;
+  }
+   
+  
+  .selected {
+    background-color: rgba(170, 190, 209, 0.2);
+    border: 1px solid rgb(229, 231, 235);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='rgb(107, 114, 128)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 10px center;
+  }
+  .rightcharts {
+    border: 1px solid rgba(92, 93, 95, 0.5);
+    border-radius: 16px;
+    width: 30%;
+  }
+  .leftcharts {
+    border: 1px solid rgba(92, 93, 95, 0.5);
+    border-radius: 16px;
+  }
+  .firstrow {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 2rem 0;
+  }
+  .Percentage {
+    color: rgba(40, 199, 111, 1);
+  }
+  .linecharts {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  

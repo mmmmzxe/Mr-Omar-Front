@@ -35,8 +35,9 @@ html {
   --blue: rgb(93, 188, 252);
   --body: rgb(28 32 39);
   --icon-hover: #d4d4d8;
-   
+  --bgColor : rgb(24 24 27);
   --container-padding: 4.8rem;
+  --dashboard: #fff;
 }
 
 .light {
@@ -52,7 +53,8 @@ html {
   --blue: rgb(0, 149, 246);
   --body: #ececec;
   --icon-hover: #333;
-
+  --bgColor : #ececec;
+  --dashboard: #000
 }
 
 body {

@@ -10,6 +10,8 @@ const nav__links = [
   { display: "التسعير", path: "/pricing" },
   { display: "تواصل معنا", path: "/contact" },
   { display: "حسابى", path: "/information" },
+
+  // رابط admin سيتم عرضه فقط إذا كان is_super_admin = 1
 ];
 
 const Header = () => {
@@ -17,9 +19,9 @@ const Header = () => {
   const [showModal, setshowModal] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem("currentMode") ?? "dark");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false); // لتخزين حالة الـ is_super_admin
   const navigate = useNavigate();
 
-  // الـ useEffect التالي سيقوم بتحديث الحالة عند تغيير قيمة التوكين في localStorage
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
@@ -28,6 +30,15 @@ const Header = () => {
       setIsLoggedIn(false);
     }
   }, [localStorage.getItem("accessToken")]);
+
+  useEffect(() => {
+    const superAdminStatus = localStorage.getItem("is_super_admin");
+    if (superAdminStatus === '1') {
+      setIsSuperAdmin(true); // إذا كانت القيمة 1، يكون المستخدم مشرف
+    } else {
+      setIsSuperAdmin(false);
+    }
+  }, []); // هذا الـ useEffect سيعمل مرة واحدة عند تحميل الصفحة
 
   useEffect(() => {
     if (theme === "light") {
@@ -68,17 +79,30 @@ const Header = () => {
         if (response.ok) {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("user");
+          localStorage.removeItem("is_super_admin"); // تأكد من إزالة الـ is_super_admin عند الخروج
           setIsLoggedIn(false);
+          setIsSuperAdmin(false);
           window.dispatchEvent(new Event('storage'));
           setshowModal(false);
           navigate("/");
           toast.success("تم تسجيل الخروج بنجاح");
         } else {
-          console.error("Logout failed!");
-          toast.error("فشل فى  تسجيل الخروج  ");
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("user");
+          localStorage.removeItem("is_super_admin"); // تأكد من إزالة الـ is_super_admin عند الخروج
+          setIsLoggedIn(false);
+          setIsSuperAdmin(false);
+          window.dispatchEvent(new Event('storage'));
+          setshowModal(false);
+          navigate("/");
+          toast.success("تم تسجيل الخروج بنجاح");
         }
       } catch (error) {
-        console.error("Error during logout:", error);
+        localStorage.removeItem("accessToken");
+          localStorage.removeItem("user");
+          localStorage.removeItem("is_super_admin"); // تأكد من إزالة الـ is_super_admin عند الخروج
+          setIsLoggedIn(false);
+          setIsSuperAdmin(false);
       }
     }
   };
@@ -108,10 +132,21 @@ const Header = () => {
                 </NavLink>
               </li>
             ))}
+          {/* تحقق من أن المستخدم لديه صلاحية الـ is_super_admin */}
+          {isSuperAdmin && (
+            <li>
+              <NavLink to="/dashboard">admin</NavLink>
+            </li>
+          )}
           {isLoggedIn && (
+            <>
             <li>
               <NavLink onClick={handleLogout}>تسجيل الخروج</NavLink>
             </li>
+            <li>
+            <NavLink to='/lesson3' >المحاضرات</NavLink>
+          </li>
+          </>
           )}
         </ul>
       </nav>
@@ -122,13 +157,6 @@ const Header = () => {
               <Link to="/login">
                 <button className="px-4 py-2 whitespace-nowrap text-base font-semibold rounded-md border-none cursor-pointer transition duration-300 ease-in-out bg-[#f26a40] text-black dark:text-white hover:text-white">
                   تسجيل الدخول
-                </button>
-              </Link>
-            </li>
-            <li>
-              <Link to="/signUp">
-                <button className="px-4 py-2 whitespace-nowrap text-base font-semibold rounded-md border-none cursor-pointer transition duration-300 ease-in-out bg-[#f26a40] text-black dark:text-white hover:text-white">
-                  انشاء حساب
                 </button>
               </Link>
             </li>
@@ -176,6 +204,11 @@ const Header = () => {
                 <li>
                   <Link to="/information" onClick={() => setshowModal(false)}>حسابى</Link>
                 </li>
+                {isSuperAdmin && (
+                  <li>
+                    <Link to="/dashboard" onClick={() => setshowModal(false)}>admin</Link>
+                  </li>
+                )}
                 <li>
                   <Link to="/" onClick={handleLogout}>تسجيل الخروج</Link>
                 </li>
@@ -188,8 +221,6 @@ const Header = () => {
           </ul>
         </div>
       )}
-
-
     </header>
   );
 };

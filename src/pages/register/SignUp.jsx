@@ -72,8 +72,8 @@ const SignUp = () => {
           </div>
           <div className={styles.left_side}>
             <div className={styles.info}>
-              <h1 className="text-black dark:text-white text-2xl md:text-4xl">ابدأ سجل اكونت معانا</h1>
-              <p className="text-black dark:text-white text-base md:text-xl">
+              <h1 className="dark:text-white text-black text-2xl md:text-4xl">ابدأ سجل اكونت معانا</h1>
+              <p className="dark:text-white  text-black text-base md:text-xl">
                 لديك أكونت بالفعل  ؟
                 <Link to="/login" className={styles.login}>
                   سجل الدخول
@@ -82,7 +82,7 @@ const SignUp = () => {
             </div>
             <form onSubmit={handleSubmit} className={styles.form_container}>
               <div className={styles.name_container}>
-                <label className="block text-black dark:text-white text-sm md:text-lg mb-1">الاسم بالكامل</label>
+                <label className="block dark:text-white  text-black text-sm md:text-lg mb-1">الاسم بالكامل</label>
                 <input
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -92,7 +92,7 @@ const SignUp = () => {
                 />
               </div>
               <div className={styles.name_container}>
-                <label className="block text-black dark:text-white text-sm md:text-lg mb-1">البريد الإلكتروني</label>
+                <label className="block dark:text-white text-black text-sm md:text-lg mb-1">البريد الإلكتروني</label>
                 <input
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -102,7 +102,7 @@ const SignUp = () => {
                 />
               </div>
               <div className={styles.name_container}>
-                <label className="block text-black dark:text-white text-sm md:text-lg mb-1">السنه الدراسيه </label>
+                <label className="block dark:text-white  text-black text-sm md:text-lg mb-1">السنه الدراسيه </label>
                 <select
                   onChange={(e) => setStudyYear(e.target.value)}
                   name="study-year"
@@ -122,7 +122,7 @@ const SignUp = () => {
               </div>
 
               <div className={styles.name_container}>
-                <label className="block text-black dark:text-white text-sm md:text-lg mb-1">كلمة السر</label>
+                <label className="block dark:text-white text-black text-sm md:text-lg mb-1">كلمة السر</label>
                 <input
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -132,7 +132,7 @@ const SignUp = () => {
                 />
               </div>
               <div className={styles.name_container}>
-                <label className="block text-black dark:text-white text-sm md:text-lg mb-1">تأكيد كلمة السر</label>
+                <label className="block dark:text-white text-black text-sm md:text-lg mb-1">تأكيد كلمة السر</label>
                 <input
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required

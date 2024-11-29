@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import styles from '../lesson1/lesson.module.css'
 const VideoPage1 = () => {
   const location = useLocation();
@@ -25,7 +25,7 @@ const VideoPage1 = () => {
       <div className="container1">
 
         {embeded ? (
-          <div className="pointer-events-none" dangerouslySetInnerHTML={{ __html: embeded }} />
+          <div className="" dangerouslySetInnerHTML={{ __html: embeded }} />
         ) : videoUrl ? (
 
           <div>
@@ -48,7 +48,14 @@ const VideoPage1 = () => {
         ) : (
           <div>لا يوجد فيديو لعرضه.</div>
         )}
+        <div className={styles.quez}>
+            <ul className='flex'>
+                <li className='pointer-events-none list-none m-6 relative'><Link className={`${styles.active} no-underline text-[16px] font-semibold transition duration-300 text-[#1a1a1a] dark:text-white`} >الشرح</Link></li>
+                <li className='list-none my-6  relative'><Link className='no-underline text-[16px] font-semibold transition duration-300 text-[#1a1a1a] dark:text-white' to="/readyQuez">الاختبار</Link></li>
+            </ul>
+        </div>
       </div>
+      
     </div>
   );
 };

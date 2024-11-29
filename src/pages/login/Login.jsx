@@ -38,13 +38,27 @@ const Login = () => {
         // Store user and access token in localStorage
         localStorage.setItem("accessToken", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("is_super_admin", data.user.is_super_admin);
 
+        localStorage.setItem("userId", data.user.id);
         // Check if user is super admin and navigate accordingly
         if (data.user.is_super_admin === 1) {
-          navigate('/upload');
+          navigate('/dashboard');
         } else {
-          navigate('/');
+          const studyYear = data.user.studyyear;
+        
+          if (studyYear === "3") {
+            navigate('/lesson3');
+          } else if (studyYear === "2") {
+            navigate('/lesson2');
+          } else if (studyYear === "1") {
+            navigate('/lesson1');
+          } else {
+            // Optional: معالجة حالة السنة الدراسية غير معروفة
+            toast.error("السنة الدراسية غير معروفة");
+          }
         }
+        
 
         toast.success("تم التسجيل بنجاح");
 
@@ -89,7 +103,7 @@ const Login = () => {
                   <h1 className="text-black text-center dark:text-white text-2xl md:text-4xl">سجل الدخول للمنصة</h1>
                   <p className="text-black text-center mt-4 dark:text-white text-base md:text-xl">
                     ليس لديك حساب  ؟
-                    <Link to="/signup" className="no-underline text-[#f26a40] mr-2">
+                    <Link to="" className="no-underline text-[#f26a40] mr-2">
                       انشأ حسابك الان
                     </Link>
                   </p>

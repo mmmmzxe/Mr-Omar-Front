@@ -55,8 +55,23 @@ const Lesson2 = () => {
   const handleStartWatching = (lessonId) => {
     const lesson = lessonData.find(item => item.id === lessonId);
     if (lesson) {
-      // توجيه المستخدم إلى صفحة الفيديو مع تمرير رابط الفيديو أو embeded
-      navigate(`/lesson-video/${lessonId}`, { state: { videoUrl: lesson.video_url, embeded: lesson.embeded } });
+      // Check the value of 'enteranceStatus.success'
+      const enteranceStatus = lesson.enteranceStatus;
+      
+      if (enteranceStatus && enteranceStatus.success === true) {
+        // If the success value is true, navigate to the video page
+        console.log('Saving lessonId:', lessonId);
+        localStorage.setItem('lessonId', lessonId);
+        console.log('Stored lessonId:', localStorage.getItem('lessonId'));
+        
+        // Navigate to the lesson video page with video URL and embedded player data
+        navigate(`/lesson-video/${lessonId}`, { state: { videoUrl: lesson.video_url, embeded: lesson.embeded } });
+      } else {
+        // If the success value is false, redirect to home
+        console.log('No result of quiz found, redirecting to home');
+        toast.error("لم تتمكن من مشاهده المحاضره الا بعد اداء امتحان المحاضره السابق");
+        navigate('');
+      }
     }
   };
 
@@ -74,7 +89,7 @@ const Lesson2 = () => {
               lessonData.map((lesson, index) => (
                 <div key={index} className={`${styles.lesson_box} bg-white rounded-md my-4 md:my-16`}>
 
-                  <img className='w-full max-w-full' src={lecture} alt="lesson-img" />
+                  <img className='w-full max-w-full' src={lesson.poster} alt="lesson-img" />
 
 
                   <div className="p-5">

@@ -36,6 +36,7 @@ export default {
         notFound: "rgb(24 24 27)",
         numberNotfound: "#f26a40",
         redText: "#E02B2B ",
+        dashboardOrange: 'rgba(241, 100, 55, 0.2)',
       },
       container: {
         center: true,

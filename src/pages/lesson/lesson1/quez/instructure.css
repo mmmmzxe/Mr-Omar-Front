@@ -1,0 +1,41 @@
+/* Start Plans Page */
+ 
+.plan {
+    background-color: var(--secondary);
+  }
+  .plan .top {
+    border: 3px solid white;
+    outline: 3px solid transparent;
+  }
+    
+  .plans-page .plan.orange .top {
+    outline-color: #f59e0b;
+  } 
+  .plan ul li {
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    direction: rtl;
+  }
+ .plan ul li .yes {
+    color: #22c55e;
+    margin-left: 8px;
+    font-size: 20px;
+  }
+ .plan ul li i:not(.yes, .help) {
+    color: #f44336;
+  }
+   .plan ul li i:first-child {
+    font-size: 18px;
+    margin-right: 5px;
+  }
+ .plan ul li .help {
+    color: #888;
+    margin-right: auto;
+    cursor: pointer;
+     
+  }
+  
+  /* End Plans Page */
+   

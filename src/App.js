@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Layout from "./pages/layout/Layout";
 import Home from "./pages/Home";
 import SignUp from "./pages/register/SignUp";
@@ -8,7 +8,6 @@ import Lesson1 from "./pages/lesson/lesson1/Lesson1";
 import Lesson2 from "./pages/lesson/lesson2/Lesson2";
 import Lesson3 from "./pages/lesson/lesson3/Lesson3";
 import Login from "./pages/login/Login";
-import UploadedVedio from "./pages/upload/UploadedVedio";
 import VideoPage from "./pages/lesson/lesson3/VideoPage";
 import VideoPage1 from "./pages/lesson/lesson1/VideoPage1";
 import VideoPage2 from "./pages/lesson/lesson2/VideoPage2";
@@ -21,23 +20,75 @@ import ProtectedRouteUser from "./pages/profile/ProtectedRouteUser";
 import ChangePassword from "./pages/profile/ChangePassword";
 import Help from "./pages/profile/Help";
 import React, { useEffect } from 'react';
-function App() {
-  // useEffect(() => {
-  //   // منع النقر بالزر الأيمن في الصفحة
-  //   const handleRightClick = (event) => {
-  //     event.preventDefault();
-  //   };
+import ReadyQuez from "./pages/lesson/lesson1/quez/ReadyQuez";
+import StartQuez from "./pages/lesson/lesson1/quez/StartQuez";
+import MakeQuiz from "./pages/lesson/lesson1/quez/MakeQuiz";
+import UpdateQuiz from "./pages/lesson/lesson1/quez/UpdateQuiz";
+import Question from "./pages/lesson/lesson1/question/Question";
+import UpdateQuestion from "./pages/lesson/lesson1/question/UpdateQuestion";
+import CreateAnswer from "./pages/lesson/lesson1/anser/CreateAnswer";
+import UpdateAnswer from "./pages/lesson/lesson1/anser/UpdateAnswer";
+import KnowResult from "./pages/lesson/lesson1/quez/KnowResult";
+import QuizNow from "./pages/lesson/lesson1/quez/QuizNow";
+import LayoutDashBoard from './dashboard/layout/LayoutDashBoard';
+import DashBoard from './dashboard/pages/DashBoard';
+import Quiz from './dashboard/pages/quiz/Quiz';
+import UploadLecture from './dashboard/pages/uploadLecture/UploadLecture';
+import AllLecture from './dashboard/pages/all Lecture/AllLecture';
+import AllQuizes from './dashboard/pages/all Quiz/AllQuizes';
+import Result from './dashboard/pages/result/Result';
+import TestApp from './components/TestApp';
+import Test2 from './components/Test2';
+import AllStudent from './dashboard/pages/allStudent/AllStudent';
+import StudentDetails from './dashboard/pages/allStudent/StudentDetails';
+import Finacial from './dashboard/pages/finacial.jsx/Finacial';
+import Calender from './dashboard/drawdashboard/Calender';
 
-  //   // إضافة الحدث إلى الوثيقة
-  //   document.addEventListener('contextmenu', handleRightClick);
+const AppRoutes = () => {
+  const navigate = useNavigate(); // التوجيه باستخدام useNavigate
+  const location = useLocation(); // الحصول على المسار الحالي
 
-  //   // تنظيف الحدث عند مغادرة المكون
-  //   return () => {
-  //     document.removeEventListener('contextmenu', handleRightClick);
-  //   };
-  // }, []);
+  React.useEffect(() => {
+    // إذا كان المسار الحالي هو /dashboard، قم بتوجيه المستخدم مباشرة إلى صفحة الـ Dashboard
+    if (location.pathname === '/dashboard') {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [location, navigate]); // التحديث عند تغيير المسار
+
+  useEffect(() => {
+    // منع النقر بالزر الأيمن في الصفحة
+    const handleRightClick = (event) => {
+      event.preventDefault();
+    };
+
+    // إضافة الحدث إلى الوثيقة
+    document.addEventListener('contextmenu', handleRightClick);
+
+    // تنظيف الحدث عند مغادرة المكون
+    return () => {
+      document.removeEventListener('contextmenu', handleRightClick);
+  };
+   }, []);
   return (
-    <Router>
+    <>
+    {location.pathname.startsWith('/dashboard') ? (
+        <Routes>
+          <Route path="/dashboard" element={
+            <ProtectedRoute element={<LayoutDashBoard />} requiredRole="is_super_admin" />
+          }>
+            <Route index element={<DashBoard />} />
+            <Route path="quiz" element={<Quiz />} />
+            <Route path="finacial" element={<Finacial />} /> 
+            <Route path="upload" element={<UploadLecture />} />
+            <Route path="all_lecture" element={<AllLecture />} />
+            <Route path="all_Quiz" element={<AllQuizes />} />
+            <Route path="all_Student" element={<AllStudent />} />
+            <Route path="details" element={<StudentDetails />} />
+            <Route path="result" element={<Result />} />
+            <Route path="calender" element={<Calender />} />
+          </Route>
+        </Routes>
+      ) : (
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -48,14 +99,46 @@ function App() {
           <Route path="/lesson3" element={<Lesson3 />} />
           <Route path="/lesson-video/:lessonId" element={<VideoPage />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/upload" element={
+          <Route path="/readyQuez" element={<ReadyQuez />} />
+          <Route path="/startQuez" element={<StartQuez />} />
+          <Route path="/makeQuiz" element={
             <ProtectedRoute
-              element={<UploadedVedio />}
+              element={<MakeQuiz />}
               requiredRole="is_super_admin"
             />
           } />
-          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/makeAnswer" element={
+            <ProtectedRoute
+              element={<CreateAnswer />}
+              requiredRole="is_super_admin"
+            />
+          } />
+          <Route path="/updateAnswer" element={
+            <ProtectedRoute
+              element={<UpdateAnswer />}
+              requiredRole="is_super_admin"
+            />
+          } />
+          <Route path="/updateQuiz" element={
+            <ProtectedRoute
+              element={<UpdateQuiz />}
+              requiredRole="is_super_admin"
+            />
+          } />
+          <Route path="/question" element={
+            <ProtectedRoute
+              element={<Question />}
+              requiredRole="is_super_admin"
+            />
+          } />
+          <Route path="/updateQuestion" element={
+            <ProtectedRoute
+              element={<UpdateQuestion />}
+              requiredRole="is_super_admin"
+            />
+          } />
           <Route path="/login" element={<Login />} />
+          {/* <Route path="/signup" element={<SignUp />} /> */}
           <Route path="/" element={<ProtectedRouteUser />}>
             <Route path="" element={<PersonalPage />}>
               <Route path="/information" element={<Portfolio />} />
@@ -65,11 +148,33 @@ function App() {
             </Route>
           </Route>
           <Route path="/contact" element={<ContactUs />} />
+          <Route path="/knowResult" element={<KnowResult />} />
+          <Route path="/quizNow" element={<QuizNow />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/test" element={
+            <ProtectedRoute
+              element={<TestApp/>}
+              requiredRole="is_super_admin"
+            />
+          } />
+          <Route path="/test2" element={
+            <ProtectedRoute
+              element={<Test2/>}
+              requiredRole="is_super_admin"
+            />
+          } />
         </Routes>
       </Layout>
-    </Router>
-  );
-}
+    )}
+  </>
+);
+};
+const App = () => {
+return (
+  <Router>
+    <AppRoutes />
+  </Router>
+);
+};
 
 export default App;

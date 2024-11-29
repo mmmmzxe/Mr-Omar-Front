@@ -17,6 +17,27 @@
     direction: rtl;
     margin-top: 25px;
 }
+.quez {
+  direction: rtl;
+}
+.quez li a:hover,
+.quez li a.active{
+    color: #f26a40;
+}
+.quez li a.active::after {
+  left: 20px;
+}
+.quez li a.active::after,
+.quez li a:hover::after {
+    content: "";
+    position: absolute;
+    width: 30%;
+    left: 20px;
+    height: 2px;
+    background-color: #f26a40;
+    bottom: -4px;
+
+}
 
 /* End lesson */
 
@@ -79,7 +100,7 @@
 }
 /* End main title */
 iframe {
-  width: 1000px; /* لجعل الـ iframe يملأ العرض بالكامل */
+  width: 1000px;  
   height: 600px;
   margin: 0px 0px 0px 30px;
 }
@@ -103,4 +124,26 @@ iframe {
     height: 500px;
     margin: 0px 0px 0px 60px;
   }
+}
+ 
+.knowResult h1 {
+  margin: 20px 20px 40px;
+  padding-top: 15px;
+  direction: rtl;
+}
+.knowResult h1::before,
+.knowResult h1::after {
+  content: "";
+  height: 3px;
+  position: absolute;
+  bottom: -10px;
+  right: 0;
+}
+.knowResult h1::before {
+  background-color: white;
+  width: 120px;
+}
+.knowResult h1::after {
+  background-color: black;
+  width: 40px;
 }
