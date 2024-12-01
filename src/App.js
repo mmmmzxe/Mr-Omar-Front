@@ -22,12 +22,6 @@ import Help from "./pages/profile/Help";
 import React, { useEffect } from 'react';
 import ReadyQuez from "./pages/lesson/lesson1/quez/ReadyQuez";
 import StartQuez from "./pages/lesson/lesson1/quez/StartQuez";
-import MakeQuiz from "./pages/lesson/lesson1/quez/MakeQuiz";
-import UpdateQuiz from "./pages/lesson/lesson1/quez/UpdateQuiz";
-import Question from "./pages/lesson/lesson1/question/Question";
-import UpdateQuestion from "./pages/lesson/lesson1/question/UpdateQuestion";
-import CreateAnswer from "./pages/lesson/lesson1/anser/CreateAnswer";
-import UpdateAnswer from "./pages/lesson/lesson1/anser/UpdateAnswer";
 import KnowResult from "./pages/lesson/lesson1/quez/KnowResult";
 import QuizNow from "./pages/lesson/lesson1/quez/QuizNow";
 import LayoutDashBoard from './dashboard/layout/LayoutDashBoard';
@@ -37,12 +31,11 @@ import UploadLecture from './dashboard/pages/uploadLecture/UploadLecture';
 import AllLecture from './dashboard/pages/all Lecture/AllLecture';
 import AllQuizes from './dashboard/pages/all Quiz/AllQuizes';
 import Result from './dashboard/pages/result/Result';
-import TestApp from './components/TestApp';
-import Test2 from './components/Test2';
 import AllStudent from './dashboard/pages/allStudent/AllStudent';
 import StudentDetails from './dashboard/pages/allStudent/StudentDetails';
 import Finacial from './dashboard/pages/finacial.jsx/Finacial';
 import Calender from './dashboard/drawdashboard/Calender';
+import FinalQuiz from './components/FinalQuiz';
 
 const AppRoutes = () => {
   const navigate = useNavigate(); // التوجيه باستخدام useNavigate
@@ -55,20 +48,20 @@ const AppRoutes = () => {
     }
   }, [location, navigate]); // التحديث عند تغيير المسار
 
-  useEffect(() => {
-    // منع النقر بالزر الأيمن في الصفحة
-    const handleRightClick = (event) => {
-      event.preventDefault();
-    };
+  // useEffect(() => {
+  //   // منع النقر بالزر الأيمن في الصفحة
+  //   const handleRightClick = (event) => {
+  //     event.preventDefault();
+  //   };
 
-    // إضافة الحدث إلى الوثيقة
-    document.addEventListener('contextmenu', handleRightClick);
+  //   // إضافة الحدث إلى الوثيقة
+  //   document.addEventListener('contextmenu', handleRightClick);
 
-    // تنظيف الحدث عند مغادرة المكون
-    return () => {
-      document.removeEventListener('contextmenu', handleRightClick);
-  };
-   }, []);
+  //   // تنظيف الحدث عند مغادرة المكون
+  //   return () => {
+  //     document.removeEventListener('contextmenu', handleRightClick);
+  // };
+  //  }, []);
   return (
     <>
     {location.pathname.startsWith('/dashboard') ? (
@@ -101,39 +94,9 @@ const AppRoutes = () => {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/readyQuez" element={<ReadyQuez />} />
           <Route path="/startQuez" element={<StartQuez />} />
-          <Route path="/makeQuiz" element={
+           <Route path="/finalQuiz" element={
             <ProtectedRoute
-              element={<MakeQuiz />}
-              requiredRole="is_super_admin"
-            />
-          } />
-          <Route path="/makeAnswer" element={
-            <ProtectedRoute
-              element={<CreateAnswer />}
-              requiredRole="is_super_admin"
-            />
-          } />
-          <Route path="/updateAnswer" element={
-            <ProtectedRoute
-              element={<UpdateAnswer />}
-              requiredRole="is_super_admin"
-            />
-          } />
-          <Route path="/updateQuiz" element={
-            <ProtectedRoute
-              element={<UpdateQuiz />}
-              requiredRole="is_super_admin"
-            />
-          } />
-          <Route path="/question" element={
-            <ProtectedRoute
-              element={<Question />}
-              requiredRole="is_super_admin"
-            />
-          } />
-          <Route path="/updateQuestion" element={
-            <ProtectedRoute
-              element={<UpdateQuestion />}
+              element={<FinalQuiz />}
               requiredRole="is_super_admin"
             />
           } />
@@ -151,18 +114,7 @@ const AppRoutes = () => {
           <Route path="/knowResult" element={<KnowResult />} />
           <Route path="/quizNow" element={<QuizNow />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/test" element={
-            <ProtectedRoute
-              element={<TestApp/>}
-              requiredRole="is_super_admin"
-            />
-          } />
-          <Route path="/test2" element={
-            <ProtectedRoute
-              element={<Test2/>}
-              requiredRole="is_super_admin"
-            />
-          } />
+           
         </Routes>
       </Layout>
     )}

@@ -2,7 +2,6 @@ import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import React from "react";
 import Bar from "./bar";
 import styles from '../dashboard.module.css' 
-import DrawDashboard from "./DrawDashboard";
 
 const Row3 = () => {
   const theme = useTheme();
@@ -25,7 +24,6 @@ const Row3 = () => {
 
 
       </Paper>
-{/* <DrawDashboard /> */}
        
     </Stack>
   );
