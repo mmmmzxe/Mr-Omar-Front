@@ -94,7 +94,7 @@ const HeaderSearch = () => {
           <h2 className="font-medium text-base 2xl:text-xl xl:text-lg text-black dark:text-white">لوحه التحكم</h2> - <span className="2xl-text-lg text-sm text-numberNotfound">الخاصة بمنصة مستر عمر رشدي</span>
         </div>
         {/* SearchBar */}
-        <div className="md:inline-flex max-w-64 ml-2 2xl:max-w-xl md:max-w-60 lg:max-w-96 lg:ml-0 md:ml-2 w-full relative">
+        <div className="md:inline-flex max-w-48 ml-2 2xl:max-w-xl md:max-w-60 lg:max-w-96 lg:ml-0 md:ml-2 w-full relative">
           <input
             type="text"
             placeholder="بحث ....."

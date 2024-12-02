@@ -3,11 +3,6 @@
   min-width: 800px;
   border-spacing: 0;
 }
-@media (max-width: 767px) {
-  .projects {
-    direction: rtl;
-  }
-}
 
 .projects table td {
   padding: 15px;
