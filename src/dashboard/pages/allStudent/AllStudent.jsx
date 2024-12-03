@@ -145,8 +145,24 @@ const AllStudent = () => {
                 ))}
               </tbody>
             </table>
-
-            <div className={`${styles.Pagination} xl:ml-16 ml-0 mt-8 `}>
+            <div className={styles.lastrow}>
+<Link to='/signup'>          <button className={`${styles.button} xl:ml-32 ml-0`}>
+            <span
+              onClick={() => setOpenModel((prev) => !prev)}
+              className={`${styles.sapn} text-base md:text-xl`}
+            >
+              + إضافة طالب
+            </span>
+          </button></Link>
+          <button className={`${styles.button} xl:ml-32 ml-0`}>
+            <span
+              onClick={() => setOpenModel((prev) => !prev)}
+              className={`${styles.sapn} text-base md:text-xl`}
+            >
+              + اضافه اشعار  
+            </span>
+          </button>
+          <div className={`${styles.Pagination} xl:ml-16 ml-0  `}>
               <Stack spacing={1}>
                 <Pagination
                   count={Math.ceil(students.length / studentsPerPage)}
@@ -165,7 +181,41 @@ const AllStudent = () => {
                 />
               </Stack>
             </div>
+        </div>
+           
           </div>
+          {openmodel && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <h1 className={styles.model_heading}>إرسال إشعارات جماعية</h1>
+              <input
+                placeholder="اكتب الإشعار الذي تود إرساله"
+                type="text"
+                className={styles.input_model}
+              />
+              <div className={styles.model_input_container}>
+                <div className={styles.input_and_label}>
+                  <input id="first" type="checkbox" />
+                  <label htmlFor="first">الصف الأول الثانوي</label>
+                </div>
+                <div className={styles.input_and_label}>
+                  <input id="secound" type="checkbox" />
+                  <label htmlFor="secound">الصف الثاني الثانوي</label>
+                </div>
+                <div className={styles.input_and_label}>
+                  <input id="therd" type="checkbox" />
+                  <label htmlFor="therd">الصف الثالث الثانوي</label>
+                </div>
+              </div>
+              <div className={styles.send_or_cansel}>
+                <button className={styles.send}>إرسال</button>
+                <button onClick={closeModel} className={styles.cansel}>
+                  إلغاء
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         </div>
       </div>
     </>

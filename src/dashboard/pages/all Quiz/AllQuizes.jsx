@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import '../result/result.css';
 import styles from '../quiz/quiz.module.css';
-import style from '../../dashboard.module.css';
+import styless from '../../dashboard.module.css';
+import style from '../allStudent/student.module.css';
 import delet from '../../../assets/delet.svg'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import SideBar from '../../component/SideBar';
 import HeaderSearch from '../../component/HeaderSearch';
-
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 const AllQuizes = () => {
   const [quizes, setQuizes] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedQuizId, setSelectedQuizId] = useState('');
+  const [newTitle, setNewTitle] = useState('');
+  const [newDescription, setNewDescription] = useState('');
+  const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
 
@@ -33,10 +40,88 @@ const AllQuizes = () => {
         setLoading(false);
       });
   }, []);
-
+  const updateModel = () => {
+    setIsUpdateOpen(true);
+  };
+  const closeUpdateModal = () => {
+    setIsUpdateOpen(false);
+  };
+  const handlModel = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const handleUpdateQuiz = () => {
+    const token = localStorage.getItem('accessToken');
+    const updatedData = {
+      title: newTitle || undefined,
+      description: newDescription || undefined,
+    };
+  
+    fetch(`https://omarroshdy.com/api/v1/quiz/${selectedQuizId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          toast.success("تم تحديث الكويز بنجاح");
+          closeUpdateModal();
+          // إعادة تحميل الكويزات من الخادم لتحديث الواجهة
+          fetch('https://omarroshdy.com/api/v1/quiz', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              setQuizes(data);
+            })
+            .catch((error) => {
+              console.error('Error fetching updated quizzes:', error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating quiz:', error);
+      });
+  };
+  const handleDeleteQuiz = () => {
+    const token = localStorage.getItem('accessToken');
+  
+    fetch(`https://omarroshdy.com/api/v1/quiz/${selectedQuizId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      if (response.ok) {
+        toast.success('تم حذف الكويز بنجاح');
+        navigate('/dashboard');
+        setQuizes((prevQuizes) => prevQuizes.filter((quiz) => quiz.id !== selectedQuizId));
+        closeModal();
+      } else {
+        toast.error('فشل حذف الكويز');
+      }
+    })
+    .catch((error) => {
+      console.error('Error deleting quiz:', error);
+      toast.error('حدث خطأ أثناء حذف الكويز');
+    });
+  };
+   
   return (
     <>
-      <div className={style.header_Dashboard}><HeaderSearch /></div>
+      <div className={styless.header_Dashboard}><HeaderSearch /></div>
       <div className='flex'>
         <SideBar />
         <div className={`${styles.quiz}  w-full`}>
@@ -101,16 +186,99 @@ const AllQuizes = () => {
                         <td>{quiz.description}</td>
                         <td><div className='flex items-center gap-2'>
                           <MoreVertIcon />
-                          <EditIcon
-                            className=''
-                          />
-                          <img
+                          <button onClick={updateModel}><EditIcon /></button>
+                          {isUpdateOpen && (
+                            <div className={style.modalOverlay}>
+                              <div className={style.modalContent}>
+                                <div className={`${style.personal_info}`}>
+                                  {/* الاسم */}
+                                  <div className={style.personal_box}>
+                                    <label className={style.lable}>عنوان الاختبار</label>
+                                    <input
+                                      type="text"
+                                      placeholder="عنوان جديد"
+                                      value={newTitle}
+                                      onChange={(e) => setNewTitle(e.target.value)}
+                                      className="block w-full rounded-md border-0 bg-gray-200 py-1.5 px-4 outline-none text-black shadow-sm ring-1 ring-inset ring-white/10 focus:ring-skyText sm:text-sm sm:leading-6 mt-2"
+                                    />
+
+                                  </div>
+
+                                  {/* البريد الإلكتروني */}
+                                  <div className={style.personal_box}>
+                                    <label className={style.lable}>  التفاصيل</label>
+                                    <input
+                                      type="text"
+                                      placeholder="تفاصيل جديدة"
+                                      value={newDescription}
+                                      onChange={(e) => setNewDescription(e.target.value)}
+                                      className="block w-full rounded-md border-0 bg-gray-200 py-1.5 px-4 outline-none text-black shadow-sm ring-1 ring-inset ring-white/10 focus:ring-skyText sm:text-sm sm:leading-6 mt-2"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="w-full">
+                                  <select
+                                    className="outline-none bg-gray-200 dark:bg-gray-500 dark:text-white w-full text-base border-b-2 border-gray-200 dark:border-categoryColor p-2 rounded-md cursor-pointer text-black"
+                                    value={selectedQuizId}
+                                    onChange={(e) => setSelectedQuizId(e.target.value)}
+                                  >
+                                    <option value="">اختر عنوان الاختبار</option>
+                                    {quizes.map((quiz) => (
+                                      <option key={quiz.id} value={quiz.id}>
+                                        {quiz.title} : {quiz.id}
+                                      </option>
+                                    ))}
+                                  </select>
+
+                                </div>
+                                <div className="flex items-center gap-4">
+                                  <button onClick={handleUpdateQuiz} className={`${style.delet} text-black`}>
+                                    تعديل
+                                  </button>
+                                  <button className="text-black" onClick={closeUpdateModal}>
+                                    إلغاء
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          <button onClick={handlModel}><img
                             src={delet}
                             alt="delet"
                             width={20}
                             height={20}
-                          />
-
+                          /></button>
+{isModalOpen && (
+                              <div className={style.modalOverlay}>
+                                <div className={style.modalContent}>
+                                  <p className="text-black">
+                                    هل أنت متأكد من حذف الكويز من علي المنصة؟
+                                  </p>
+                                  <div className="w-full">
+                                    <select
+                                      className="outline-none bg-gray-200 dark:bg-gray-500 dark:text-white w-full text-base border-b-2 border-gray-200 dark:border-categoryColor p-2 rounded-md cursor-pointer text-black"
+                                      value={selectedQuizId}
+                                      onChange={(e) => setSelectedQuizId(e.target.value)}
+                                    >
+                                      <option value="">اختر عنوان الاختبار</option>
+                                      {quizes.map((quiz) => (
+                                        <option key={quiz.id} value={quiz.id}>
+                                          {quiz.title} : {quiz.id}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                  <div className="flex items-center gap-4">
+                                    <button onClick={handleDeleteQuiz} className={`${style.delet} text-black`}>
+                                      حذف
+                                    </button>
+                                    <button className="text-black" onClick={closeModal}>
+                                      إلغاء
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                         </div></td>
                       </tr>
                     ))

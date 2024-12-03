@@ -47,13 +47,9 @@ const LayoutDashBoard = ({ children }) => {
         </Toaster>
          
       </main>
-{/* <div className="flex"> */}
-{/* <SideBar /> */}
 <Box component="main">
   <Outlet />
 </Box>
-
-{/* </div> */}
 
      
     </div>

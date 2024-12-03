@@ -54,6 +54,10 @@ const FinalQuiz = () => {
 
     fetchLessons();
   }, []);
+
+  const handleClearAnswer = (index) => {
+    handleInputChange(index, "answer_text", ""); // تحديث النص ليصبح فارغًا
+  };
   // delete quiz
   const handleDeleteQuiz = async () => {
     const accessToken = localStorage.getItem("accessToken");
@@ -215,54 +219,42 @@ const handleInputChange = (index, field, value) => {
     }
     setAnswers(updatedAnswers);
 };
-const handleFileChange = (index, file) => {
-  const updatedAnswers = [...answers];
-  updatedAnswers[index].image = file;
-  setAnswers(updatedAnswers);
-};
+const handleDeleteQuestion = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+  const questionId = localStorage.getItem("question_id");  // جلب ID السؤال من localStorage
 
-const handleFileUpload = (index, file) => {
-  const updatedAnswers = [...answers];
-  updatedAnswers[index].isLoading = true;
-  setAnswers(updatedAnswers);
+  if (!accessToken) {
+    toast.error("الرجاء تسجيل الدخول أولا");
+    return;
+  }
 
-  const token = localStorage.getItem("accessToken");
+  if (!questionId) {
+    toast.error("لا يوجد سؤال للحذف");
+    return;
+  }
 
-  const formData = new FormData();
-  formData.append("image", file);
+  try {
+    setIsLoading(true);
+    const response = await fetch(`https://omarroshdy.com/api/v1/question/${questionId}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`, // إرسال الـ accessToken في الـ header
+      },
+    });
 
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "https://omarroshdy.com/api/v1/upload");
-  xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-
-  xhr.upload.onprogress = (event) => {
-    if (event.lengthComputable) {
-      const progress = (event.loaded / event.total) * 100;
-      updatedAnswers[index].progress = Math.round(progress);
-      setAnswers([...updatedAnswers]);
-    }
-  };
-
-  xhr.onload = () => {
-    if (xhr.status === 200) {
-      updatedAnswers[index].isLoading = false;
-      setAnswers([...updatedAnswers]);
+    if (response.ok) {
+      toast.success("تم حذف السؤال بنجاح");
+      // يمكنك مسح الـ ID من localStorage بعد الحذف إذا أردت
+      localStorage.removeItem("question_id");
     } else {
-      updatedAnswers[index].isLoading = false;
-      updatedAnswers[index].progress = 0;
-      setAnswers([...updatedAnswers]);
-      console.error("Error uploading file.");
+      toast.error("لا يوجد سؤال للحذف");
     }
-  };
-
-  xhr.onerror = () => {
-    updatedAnswers[index].isLoading = false;
-    updatedAnswers[index].progress = 0;
-    setAnswers([...updatedAnswers]);
-    console.error("Network error while uploading file.");
-  };
-
-  xhr.send(formData);
+  } catch (error) {
+    console.error("Request failed:", error);
+    toast.error("حدث خطأ أثناء إرسال الطلب حاول مره اخرى");
+  } finally {
+    setIsLoading(false);
+  }
 };
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -320,6 +312,43 @@ const handleSubmit = async (e) => {
     console.error("Network error:", error);
   }
 };
+const handleDeleteAnswer = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+  const answerId = localStorage.getItem("answer_id");
+
+  if (!accessToken) {
+    toast.error("الرجاء تسجيل الدخول أولا");
+    return;
+  }
+
+  if (!answerId) {
+    toast.error("لا يوجد إجابة للحذف");
+    return;
+  }
+
+  try {
+    setIsLoading(true);
+    const response = await fetch(`https://omarroshdy.com/api/v1/ans/${answerId}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+    });
+
+    if (response.ok) {
+      toast.success("تم حذف الإجابة بنجاح");
+      localStorage.removeItem("answer_id");
+    } else {
+      const result = await response.json();
+      toast.error("لا يوجد اجابه للحذف");
+    }
+  } catch (error) {
+    console.error("Request failed:", error);
+    toast.error("حدث خطأ أثناء إرسال الطلب حاول مره اخرى");
+  } finally {
+    setIsLoading(false);
+  }
+};
   return (
     <div style={{ background: 'var(--secondary)' }} className="container1 my-8 min-h-screen flex flex-col items-center justify-center space-y-8 p-4">
       {/* البطاقة الأولى: عنوان الاختبار */}
@@ -360,9 +389,17 @@ const handleSubmit = async (e) => {
             ))}
           </select>
         </div>
-        <div className="flex cursor-pointer items-center w-full">
-          <img src={add} alt="add_img" onClick={handleCreateQuiz} />
+        <div className="flex justify-between items-center">
+        <button onClick={handleCreateQuiz} className="flex cursor-pointer items-center w-full mt-3">
+            <img src={add} alt="add_img"/>
+          </button>
+          <div className="mt-4 flex justify-end space-x-4 rtl:space-x-reverse">
+            <button className="text-blue-500 hover:text-blue-700">
+              <img src={delet} onClick={handleDeleteQuiz} alt="delet" />
+            </button>
+          </div>
         </div>
+
       </div>
 
       {/* البطاقة الثانية: عنوان السؤال */}
@@ -395,9 +432,17 @@ const handleSubmit = async (e) => {
           </div>
         )}
         <hr className="border-gray-300" />
-        <button onClick={handleSubmitQuestion} className="flex cursor-pointer items-center w-full my-3">
+        <div className="flex justify-between items-center">
+        <button onClick={handleSubmitQuestion} className="flex cursor-pointer items-center w-full mt-3">
             <img src={add} alt="add_img"/>
           </button>
+          <div className="mt-4 flex justify-end space-x-4 rtl:space-x-reverse">
+            <button className="text-blue-500 hover:text-blue-700">
+              <img src={delet} onClick={handleDeleteQuestion} alt="delet" />
+            </button>
+          </div>
+        </div>
+         
         {answers.map((answer, index) => (
           <div className="space-y-2">
           <div className="flex items-center justify-between space-x-2 rtl:space-x-reverse mt-2">
@@ -418,7 +463,7 @@ const handleSubmit = async (e) => {
                 }
               className="w-full h-full text-lg bg-transparent outline-none border-none dark:placeholder:text-gray-400 placeholder:text-black text-black dark:text-white"
             />
-            <button className="text-red-500">
+            <button onClick={() => handleClearAnswer(index)} className="text-red-500">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -444,7 +489,7 @@ const handleSubmit = async (e) => {
               <img src={updateQuiz} alt="updateQuiz" />
             </button>
             <button className="text-blue-500 hover:text-blue-700">
-              <img src={delet} onClick={handleDeleteQuiz} alt="delet" />
+              <img src={delet} onClick={handleDeleteAnswer} alt="delet" />
             </button>
           </div>
         </div>

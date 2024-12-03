@@ -165,6 +165,9 @@ const HeaderSearch = () => {
               <ListItemButton to="/dashboard/finacial" onClick={() => setshowModal(false)}>التقارير الماليه</ListItemButton>
             </li>
             <li>
+              <ListItemButton to="/" onClick={() => setshowModal(false)}>الرجوع الى المنصه</ListItemButton>
+            </li> 
+            <li>
               <ListItemButton to="/" onClick={handleLogout}>تسجيل الخروج</ListItemButton>
             </li>
           </ul>

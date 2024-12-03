@@ -105,7 +105,6 @@
   width: 100%;
   margin-bottom: 20px;
   display: flex;
-   
   align-items: center;
 }
 .button {
@@ -115,7 +114,6 @@
 }
 .sapn,
 .notification {
-  font-size: 24px;
   font-weight: 400;
 }
 .sapn {
@@ -154,6 +152,7 @@
   font-size: 24px;
   font-weight: 500;
   text-align: center;
+  color: #000;
 }
 .input_model {
   width: 450px;
@@ -165,11 +164,13 @@
   font-family: "Cairo";
   font-size: 15px;
   padding: 10px 15px;
+  color: #000;
 }
 .input_and_label {
   display: flex;
   gap: 10px;
   width: 100%;
+  color: #000;
 }
 .send,
 .cansel {

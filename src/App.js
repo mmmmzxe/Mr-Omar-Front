@@ -34,7 +34,6 @@ import Result from './dashboard/pages/result/Result';
 import AllStudent from './dashboard/pages/allStudent/AllStudent';
 import StudentDetails from './dashboard/pages/allStudent/StudentDetails';
 import Finacial from './dashboard/pages/finacial.jsx/Finacial';
-import Calender from './dashboard/drawdashboard/Calender';
 import FinalQuiz from './components/FinalQuiz';
 
 const AppRoutes = () => {
@@ -48,20 +47,20 @@ const AppRoutes = () => {
     }
   }, [location, navigate]); // التحديث عند تغيير المسار
 
-  // useEffect(() => {
-  //   // منع النقر بالزر الأيمن في الصفحة
-  //   const handleRightClick = (event) => {
-  //     event.preventDefault();
-  //   };
+  useEffect(() => {
+    // منع النقر بالزر الأيمن في الصفحة
+    const handleRightClick = (event) => {
+      event.preventDefault();
+    };
 
-  //   // إضافة الحدث إلى الوثيقة
-  //   document.addEventListener('contextmenu', handleRightClick);
+    // إضافة الحدث إلى الوثيقة
+    document.addEventListener('contextmenu', handleRightClick);
 
-  //   // تنظيف الحدث عند مغادرة المكون
-  //   return () => {
-  //     document.removeEventListener('contextmenu', handleRightClick);
-  // };
-  //  }, []);
+    // تنظيف الحدث عند مغادرة المكون
+    return () => {
+      document.removeEventListener('contextmenu', handleRightClick);
+  };
+   }, []);
   return (
     <>
     {location.pathname.startsWith('/dashboard') ? (
@@ -78,7 +77,6 @@ const AppRoutes = () => {
             <Route path="all_Student" element={<AllStudent />} />
             <Route path="details" element={<StudentDetails />} />
             <Route path="result" element={<Result />} />
-            <Route path="calender" element={<Calender />} />
           </Route>
         </Routes>
       ) : (
@@ -97,6 +95,12 @@ const AppRoutes = () => {
            <Route path="/finalQuiz" element={
             <ProtectedRoute
               element={<FinalQuiz />}
+              requiredRole="is_super_admin"
+            />
+          } />
+          <Route path="/signup" element={
+            <ProtectedRoute
+              element={<SignUp />}
               requiredRole="is_super_admin"
             />
           } />
