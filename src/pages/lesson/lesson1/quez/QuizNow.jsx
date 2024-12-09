@@ -211,11 +211,10 @@ const QuizNow = () => {
             let currentScore = JSON.parse(localStorage.getItem("score")) || 0;
     
             if (selectedAnswer && selectedAnswer.is_correct === 1) {
-                currentScore += 1; // Increment score for correct answers
+                currentScore += 1; 
             }
             localStorage.setItem("score", JSON.stringify(currentScore));
     
-            // Save response
             await axios.post(
                 "https://omarroshdy.com/api/v1/response",
                 {
