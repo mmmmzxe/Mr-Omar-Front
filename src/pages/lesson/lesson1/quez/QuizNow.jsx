@@ -4,9 +4,10 @@ import { FaChevronRight } from "react-icons/fa";
 import styles from './ques.module.css';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import { data } from "autoprefixer";
 
 const QuizNow = () => {
-    const [seconds, setSeconds] = useState(30);
+
     const [quizTitle, setQuizTitle] = useState("");
     const [error, setError] = useState("");
     const [questions, setQuestions] = useState([]);
@@ -14,6 +15,7 @@ const QuizNow = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState([]);
     const [selectedAnswerId, setSelectedAnswerId] = useState(null);
+    const [quizDuration, setQuizDuration] = useState(0);  // Store the total quiz duration
     const navigate = useNavigate();
     const accessToken = localStorage.getItem("accessToken");
     const lessonId = localStorage.getItem("lessonId");
@@ -21,8 +23,8 @@ const QuizNow = () => {
     const hasAnswerText = answers.some(answer => answer.answer_text != null && answer.answer_text !== "");
     const hasQuestionText = questions.some(question => question.question_text != null && question.question_text !== "");
     const [isQuizFinished, setIsQuizFinished] = useState(false);
+    const [duration, setDuration] = useState(0);  // Duration for each question
 
-    // Fetch quiz data
     useEffect(() => {
         if (!lessonId) {
             setError("لا يوجد lessonId في localStorage.");
@@ -42,6 +44,7 @@ const QuizNow = () => {
                 const data = await response.json();
                 if (data && data.id) {
                     setQuizTitle(data.title);
+                    setQuizDuration(data.duration || 0); 
                     localStorage.setItem("quizId", data.id);
                 } else {
                     throw new Error("لا يوجد اختبارات حتى الان");
@@ -68,16 +71,21 @@ const QuizNow = () => {
             window.removeEventListener("storage", handleStorageChange);
         };
     }, []);
-
-    // Countdown Timer
     useEffect(() => {
-        if (seconds > 0) {
-            const countdown = setInterval(() => setSeconds(prev => prev - 1), 1000);
+        if (quizDuration > 0 && !isQuizFinished) {
+            const countdown = setInterval(() => {
+                setQuizDuration(prev => prev - 1);
+            }, 1000);
+
+            // Finish quiz when timer runs out
+            if (quizDuration === 0) {
+                setIsQuizFinished(true);
+            }
+
             return () => clearInterval(countdown);
         }
-    }, [seconds]);
+    }, [quizDuration, isQuizFinished]);
 
-    // Fetch questions
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
@@ -85,19 +93,23 @@ const QuizNow = () => {
                     headers: { Authorization: `Bearer ${accessToken}` },
                     params: { quiz_id: localStorage.getItem("quizId") },
                 });
-
+    
                 if (response.data && response.data.length > 0) {
                     const cleanedQuestions = response.data.map((question) => ({
                         ...question,
-                        image: question.image === "https://omarroshdy.com/images" ? null : question.image, // حذف الصور غير الصالحة
+                        image: question.image === "https://omarroshdy.com/images" ? null : question.image, 
                     }));
-
-                    console.log("Cleaned questions:", cleanedQuestions);  
+    
                     const shuffledQuestions = shuffleArray(cleanedQuestions);
                     setQuestions(shuffledQuestions);
-
+    
                     const firstQuestion = shuffledQuestions[0];
                     setQuestionText(firstQuestion.question_text);
+    
+                    if (firstQuestion.duration) {
+                        setDuration(firstQuestion.duration);
+                    }
+    
                     localStorage.setItem("questionId", firstQuestion.id);
                     localStorage.setItem("questionsLength", shuffledQuestions.length);
                 }
@@ -107,6 +119,7 @@ const QuizNow = () => {
         };
         fetchQuestions();
     }, [accessToken]);
+    
 
     const shuffleArray = (array) => {
         let shuffledArray = [...array]; 
@@ -125,77 +138,109 @@ const QuizNow = () => {
                         headers: { Authorization: `Bearer ${accessToken}` },
                         params: { question_id: questionId },
                     });
-
-                    setAnswers(response.data || []);
+    
+                    if (response.data && response.data.length > 0) {
+                        // Map over the answers to clean up image URLs, similar to what you did for questions
+                        const cleanedAnswers = response.data.map((answer) => ({
+                            ...answer,
+                            image: answer.image === "https://omarroshdy.com/images" ? null : answer.image, 
+                        }));
+    
+                        setAnswers(cleanedAnswers);
+                        console.log(response.data)
+                    }
                 } catch (error) {
                     console.error("Error fetching answers:", error);
                 }
             }
         };
-
+    
         fetchAnswers();
     }, [currentQuestionIndex, questions, accessToken]);
+    
 
     const handleAnswerSelect = (id) => {
         setSelectedAnswerId(id);
         localStorage.setItem("answerId", id);
     };
+    useEffect(() => {
+        if (duration > 0 && !isQuizFinished) {
+            const countdown = setInterval(() => {
+                setDuration((prevDuration) => prevDuration - 1);
+            }, 1000);
+    
+            if (duration === 0) {
+                handleNextQuestion();
+            }
+    
+            return () => clearInterval(countdown);
+        }
+    }, [duration, isQuizFinished]);
+    
+    const handleNextQuestion = () => {
+        if (currentQuestionIndex === questions.length - 1) {
+            setIsQuizFinished(true); // Quiz ends
+        } else {
+            const nextQuestionIndex = currentQuestionIndex + 1;
+            setCurrentQuestionIndex(nextQuestionIndex);
+    
+            // Set duration for the next question
+            const nextQuestion = questions[nextQuestionIndex];
+            if (nextQuestion?.duration) {
+                setDuration(nextQuestion.duration);
+            } else {
+                setDuration(30); // Default duration if not specified
+            }
+        }
+    };
+    
+    // Adjust handleConfirm to account for timer expiry and progression
     const handleConfirm = async () => {
         try {
             const studentId = localStorage.getItem("userId");
             const quizId = localStorage.getItem("quizId");
             const questionId = localStorage.getItem("questionId");
             const selectedAnswerId = localStorage.getItem("answerId");
-
+    
             if (!studentId || !quizId || !questionId || !selectedAnswerId) {
                 console.error("Missing required data.");
                 return;
             }
-            if (currentQuestionIndex === questions.length - 1) {
-                setIsQuizFinished(true); // انتهى الاختبار
-            } else {
-                // الانتقال إلى السؤال التالي
-                setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-            }
-
-            // قم بجلب الإجابة من الـ answers للتحقق من صحتها
+    
             const selectedAnswer = answers.find(answer => answer.id === parseInt(selectedAnswerId));
             let currentScore = JSON.parse(localStorage.getItem("score")) || 0;
-
+    
             if (selectedAnswer && selectedAnswer.is_correct === 1) {
-                currentScore += 1;  
+                currentScore += 1; // Increment score for correct answers
             }
             localStorage.setItem("score", JSON.stringify(currentScore));
-
-            const response = await axios.post("https://omarroshdy.com/api/v1/response", {
-                student_id: studentId,
-                quiz_id: quizId,
-                question_id: questionId,
-                selected_answer_id: selectedAnswerId,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    "Content-Type": "application/json",
+    
+            // Save response
+            await axios.post(
+                "https://omarroshdy.com/api/v1/response",
+                {
+                    student_id: studentId,
+                    quiz_id: quizId,
+                    question_id: questionId,
+                    selected_answer_id: selectedAnswerId,
                 },
-            });
-
-            if (response.status === 201) {
-                toast.success("تم تسجيل اجابتك بنجاح");
-                if (currentQuestionIndex < questions.length - 1) {
-                    setCurrentQuestionIndex(prevIndex => prevIndex + 0);  
-                    setSeconds(30);  
-                } else {
-                    toast.success("انتهيت من جميع الأسئلة!");
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        "Content-Type": "application/json",
+                    },
                 }
-            } else {
-                console.error("Failed to submit response:", response.data);
-                toast.error("فشل في إرسال الإجابة.");
-            }
+            );
+    
+            // Move to the next question
+            handleNextQuestion();
         } catch (error) {
             console.error("Error submitting response:", error);
             toast.error("حدث خطأ في إرسال الإجابة.");
         }
     };
+    
+    
 
     useEffect(() => {
         return () => {
@@ -247,7 +292,7 @@ const QuizNow = () => {
     };
     const handleBulletClick = (index) => {
         setCurrentQuestionIndex(index);  
-        setSeconds(30);   
+     
     };
     return (
 
@@ -260,7 +305,7 @@ const QuizNow = () => {
                             <div>
                                 <h1 className="bg-[#AABED11A] mt-4 text-center">
                                     <button className="border-none outline-none px-2 py-1 m-2 rounded text-white bg-[#f26a40] cursor-pointer mt-2 text-base">
-                                        {seconds} Seconds : الوقت المتبقى
+                                        {quizDuration} Seconds : الوقت المتبقى
                                     </button>
                                 </h1>
 
@@ -327,24 +372,34 @@ const QuizNow = () => {
 
                             {hasAnswerText && (
                                 <ul className={`${styles.start_Quiz} flex flex-col gap-4 text-sm lg:text-base text-[#767676] my-8 pb-8}`}>
-                                    {answers.map((answer) => (
-                                        <li
-                                            key={answer.id}
-                                            className={`${styles.input_Start} bg-[#AABED11A] px-2 xl:mx-64 rounded-lg pb-4 flex items-center gap-2 duration-300 dark:text-white text-black`}
-                                        >
-                                            <input
-                                                className="mt-3 mr-2"
-                                                type="radio"
-                                                name="answer"
-                                                value={answer.id}
-                                                checked={selectedAnswerId === answer.id}
-                                                onChange={() => handleAnswerSelect(answer.id)}
-                                            />
-                                            {answer.answer_text && (
-                                                <span className={`${styles.answer} mt-2 text-lg`}>{answer.answer_text}</span>  // عرض النص إذا كان موجودًا
-                                            )}
-                                        </li>
-                                    ))}
+                                 {answers.map((answer) => (
+    <li
+        key={answer.id}
+        className={`${styles.input_Start} bg-[#AABED11A] px-2 xl:mx-64 rounded-lg pb-4 flex items-center gap-2 duration-300 dark:text-white text-black`}
+    >
+        <input
+            className="mt-3 mr-2"
+            type="radio"
+            name="answer"
+            value={answer.id}
+            checked={selectedAnswerId === answer.id}
+            onChange={() => handleAnswerSelect(answer.id)}
+        />
+        {answer.answer_text && (
+            <span className={`${styles.answer} mt-2 text-lg`}>{answer.answer_text}</span>  // Display text if it exists
+        )}
+        {answer.image && (
+            <div className="flex justify-center mt-2">
+                <img
+                    src={answer.image}
+                    alt={`Answer ${answer.id}`}
+                    className="md:w-[200px] md:h-[100px] w-[150px] h-[75px] rounded-lg"
+                />
+            </div>
+        )}
+    </li>
+))}
+
                                     <div className={`${styles.input_Start} xl:mx-64 pb-4`}>
                                         <button className="border-none outline-none px-4 py-1.5 rounded text-white bg-[#f26a40] cursor-pointer mt-2 text-base" onClick={handleConfirm}>
                                             <Link to="">تاكيد</Link>

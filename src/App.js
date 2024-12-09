@@ -35,32 +35,19 @@ import AllStudent from './dashboard/pages/allStudent/AllStudent';
 import StudentDetails from './dashboard/pages/allStudent/StudentDetails';
 import Finacial from './dashboard/pages/finacial.jsx/Finacial';
 import FinalQuiz from './components/FinalQuiz';
+import Questionss from './components/Questions';
 
 const AppRoutes = () => {
   const navigate = useNavigate(); // التوجيه باستخدام useNavigate
   const location = useLocation(); // الحصول على المسار الحالي
 
   React.useEffect(() => {
-    // إذا كان المسار الحالي هو /dashboard، قم بتوجيه المستخدم مباشرة إلى صفحة الـ Dashboard
     if (location.pathname === '/dashboard') {
       navigate('/dashboard', { replace: true });
     }
-  }, [location, navigate]); // التحديث عند تغيير المسار
+  }, [ ]); // التحديث عند تغيير المسار
 
-  useEffect(() => {
-    // منع النقر بالزر الأيمن في الصفحة
-    const handleRightClick = (event) => {
-      event.preventDefault();
-    };
-
-    // إضافة الحدث إلى الوثيقة
-    document.addEventListener('contextmenu', handleRightClick);
-
-    // تنظيف الحدث عند مغادرة المكون
-    return () => {
-      document.removeEventListener('contextmenu', handleRightClick);
-  };
-   }, []);
+  
   return (
     <>
     {location.pathname.startsWith('/dashboard') ? (
@@ -95,6 +82,12 @@ const AppRoutes = () => {
            <Route path="/finalQuiz" element={
             <ProtectedRoute
               element={<FinalQuiz />}
+              requiredRole="is_super_admin"
+            />
+          } />
+              <Route path="/questions" element={
+            <ProtectedRoute
+              element={<Questionss/>}
               requiredRole="is_super_admin"
             />
           } />

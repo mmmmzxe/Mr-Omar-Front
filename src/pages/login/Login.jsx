@@ -4,17 +4,21 @@ import { Link } from "react-router-dom";
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import login from '../../assets/login.svg'
+import { FiEyeOff } from "react-icons/fi";
+import { FaEye } from "react-icons/fa6";
 const Login = () => {
   const navigate = useNavigate();
 
   const [logedasparent, setLoggedasparent] = useState(false);
   const [pass, setPass] = useState(80);
-
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   // State variables to capture form inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
-
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
   // Function to handle form submission
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -31,17 +35,17 @@ const Login = () => {
 
       const data = await response.json();
       console.log(data);
+    
 
       if (response.ok) {
         console.log("Login is successful", data);
 
-        // Store user and access token in localStorage
         localStorage.setItem("accessToken", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("userId", JSON.stringify(data.id));
         localStorage.setItem("is_super_admin", data.user.is_super_admin);
 
         localStorage.setItem("userId", data.user.id);
-        // Check if user is super admin and navigate accordingly
         if (data.user.is_super_admin === 1) {
           navigate('/dashboard');
         } else {
@@ -54,7 +58,6 @@ const Login = () => {
           } else if (studyYear === "1") {
             navigate('/lesson1');
           } else {
-            // Optional: معالجة حالة السنة الدراسية غير معروفة
             toast.error("السنة الدراسية غير معروفة");
           }
         }
@@ -120,16 +123,26 @@ const Login = () => {
                     />
                   </div>
                   <label className="block text-black dark:text-white text-sm md:text-lg mb-1">كلمة السر</label>
-                  <div className={styles.input_wrapper}>
-
-                    <input
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className={styles.form_control}
-                      type="password"
-                      placeholder="ادخل كلمة السر الخاصة بك"
-                    />
-                  </div>
+                  <div className={`${styles.input_wrapper} flex justify-center items-center gap-5`}>
+      <input
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        className={styles.form_control}
+        type={isPasswordVisible ? 'text' : 'password'} // Toggle between text and password type
+        placeholder="ادخل كلمة السر الخاصة بك"
+      />
+      <button 
+        type="button" 
+        onClick={togglePasswordVisibility} 
+        className="flex justify-center items-center" // You can style the button
+      >
+       {isPasswordVisible ? (
+          <FiEyeOff className="h-5 w-5 text-gray-500" /> // Heroicon for eye-off
+        ) : (
+          <FaEye className="h-5 w-5 text-gray-500" /> // Heroicon for eye
+        )}
+      </button>
+    </div>
                   <div className="w-full xl:w-[40%] mt-2 p-[2px_20px] text-center border border-[#f26a40] bg-[#f26a40] rounded-[10px]">
                     <button className="text-white w-full text-[20px] font-medium bg-transparent border-none cursor-pointer font-[Cairo]">تسجيل الدخول</button>
                   </div>

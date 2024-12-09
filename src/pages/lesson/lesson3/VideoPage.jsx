@@ -1,57 +1,84 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import styles from '../lesson1/lesson.module.css'
-//import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import styles from '../lesson1/lesson.module.css';
+
 const VideoPage3 = () => {
   const location = useLocation();
-  const { videoUrl, embeded } = location.state || {};
-  const [quizTitle, setQuizTitle] = useState(""); 
-  const [error, setError] = useState(""); 
-  const accessToken = localStorage.getItem("accessToken");
-  const lessonId = localStorage.getItem("lessonId");
-  const navigate = useNavigate(); 
-  useEffect(() => {
-      if (!lessonId) {
-          setError("لا يوجد lessonId في localStorage.");
-          return;
-      }
+  const { videoUrl, embeded, duration } = location.state || {}; // تأكد من إضافة duration
+  const [error, setError] = useState(null);
+  const [videoWatchedPercentage, setVideoWatchedPercentage] = useState(0);
+  const iframeRef = useRef(null);
+  const lessonId = localStorage.getItem('lessonId'); 
+  const userId = localStorage.getItem('userId'); 
+  const accessToken = localStorage.getItem('accessToken');
 
-      const fetchQuizData = async () => {
-          try {
-              const response = await fetch(`https://omarroshdy.com/api/v1/quizle/${lessonId}`, {
-                  method: "GET",
-                  headers: {
-                      "Authorization": `Bearer ${accessToken}`, 
-                      "Content-Type": "application/json"
-                  }
-              });
-
-              const data = await response.json();
-              if (data && data.id) {
-                  setQuizTitle(data.title); 
-                  localStorage.setItem("quizId", data.id);
-              } else {
-                  throw new Error("لا يوجد اختبارات حتى الان.");
-              }
-          } catch (error) {
-              setError(error.message);
-          }
-      };
-
-      fetchQuizData();
-  }, [lessonId, accessToken]);
-  const handleStartQuiz = () => {
-    if (!localStorage.getItem("quizId")) {
-      setError("لا يوجد اختبار للبدء فيه.");
-    } else {
-      navigate("/readyQuez");  // إعادة التوجيه إلى صفحة الاختبار
-    }
-  };
   useEffect(() => {
     if (!videoUrl && !embeded) {
       setError('لا يوجد فيديو لعرضه.');
     }
   }, [videoUrl, embeded]);
+
+  const trackVideoProgress = (event) => {
+    const target = event.target;
+    if (target && target.currentTime && target.duration) {
+      const currentTime = target.currentTime;
+      const videoDuration = target.duration;
+      const percentage = (currentTime / videoDuration) * 100;
+
+      setVideoWatchedPercentage(percentage);
+
+      if (percentage >= 75) {
+        sendVideoProgress(videoDuration); // إرسال مدة الفيديو
+      }
+    }
+  };
+
+  const sendVideoProgress = async (videoDuration) => {
+    if (!userId || !lessonId || !accessToken) {
+      console.error('User or lesson data missing');
+      return;
+    }
+
+    const data = {
+      lesson_id: lessonId,
+      user_id: userId,
+      video_duration: videoDuration,  // إرسال مدة الفيديو
+      watched_percentage: videoWatchedPercentage // إرسال التقدم
+    };
+
+    try {
+      const response = await fetch('https://omarroshdy.com/api/v1/view', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        console.log('Video progress recorded successfully');
+      } else {
+        console.error('Failed to record video progress');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (iframeRef.current) {
+      const iframe = iframeRef.current;
+      iframe.addEventListener('timeupdate', trackVideoProgress);
+    }
+
+    return () => {
+      if (iframeRef.current) {
+        const iframe = iframeRef.current;
+        iframe.removeEventListener('timeupdate', trackVideoProgress);
+      }
+    };
+  }, []);
 
   if (error) {
     return <div>{error}</div>;
@@ -63,39 +90,35 @@ const VideoPage3 = () => {
         . شاهد الان
       </h2>
       <div className="container1">
-
         {embeded ? (
           <div className="" dangerouslySetInnerHTML={{ __html: embeded }} />
         ) : videoUrl ? (
-
           <div>
-            <div>
-              <div >
-                <iframe
-                  className={`${styles.howToUse} md:w-[600px] md:h-[350px]`}
-                  src={videoUrl}
-                  width="100%"
-                  height="500"
-                  frameBorder="0"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowFullScreen
-                  title="lesson-video"
-                />
-              </div>
-            </div>
+            <iframe
+              ref={iframeRef} // Reference to the iframe element
+              className={`${styles.howToUse} md:w-[600px] md:h-[350px]`}
+              src={videoUrl}
+              width="100%"
+              height="500"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              title="lesson-video"
+            />
           </div>
-
         ) : (
           <div>لا يوجد فيديو لعرضه.</div>
         )}
         <div className={styles.quez}>
-            <ul className='flex'>
-                <li className='pointer-events-none list-none m-6 relative'><Link className={`${styles.active} no-underline text-[16px] font-semibold transition duration-300 text-[#1a1a1a] dark:text-white`} >الشرح</Link></li>
-                <li className='list-none my-6  relative'><Link className='no-underline text-[16px] font-semibold transition duration-300 text-[#1a1a1a] dark:text-white' to="/readyQuez" onClick={handleStartQuiz}>الاختبار</Link></li>
-            </ul>
+          <ul className='flex'>
+            <li className='pointer-events-none list-none m-6 relative'>
+              <Link className={`${styles.active} no-underline text-[16px] font-semibold transition duration-300 text-[#1a1a1a] dark:text-white`} >الشرح</Link>
+            </li>
+            <li className='list-none my-6  relative'>
+              <Link className='no-underline text-[16px] font-semibold transition duration-300 text-[#1a1a1a] dark:text-white' to="/readyQuez">الاختبار</Link>
+            </li>
+          </ul>
         </div>
       </div>
-      
     </div>
   );
 };
