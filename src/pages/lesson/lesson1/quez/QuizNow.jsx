@@ -233,6 +233,8 @@ const QuizNow = () => {
     
             // Move to the next question
             handleNextQuestion();
+           
+
         } catch (error) {
             console.error("Error submitting response:", error);
             toast.error("حدث خطأ في إرسال الإجابة.");
@@ -247,7 +249,6 @@ const QuizNow = () => {
             localStorage.removeItem("score");  
             localStorage.removeItem("questionsLength");
 
-            console.log("Question ID and score removed from localStorage.");
         };
     }, []);
     const handlePostRequest = async () => {

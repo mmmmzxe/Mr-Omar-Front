@@ -63,7 +63,7 @@ const Login = () => {
         }
         
 
-        toast.success("تم التسجيل بنجاح");
+       
 
         // Optional: Generate parent code if needed
         const parentCodeResponse = await fetch(

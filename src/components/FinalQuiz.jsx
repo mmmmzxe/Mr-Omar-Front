@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import Loader from "../pages/upload/Loader";
 
 const FinalQuiz = () => {
   const [title, setTitle] = useState("");
@@ -11,6 +12,7 @@ const FinalQuiz = () => {
   const [optional, setOptional] = useState(false);
   const accessToken = localStorage.getItem("accessToken");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -34,6 +36,9 @@ const FinalQuiz = () => {
       } catch (error) {
         console.error("Error fetching lessons:", error);
         toast.error("تاكد من اتصالك بالانترنت");
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -88,7 +93,11 @@ const FinalQuiz = () => {
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6 text-black dark:text-white">
       <h1 className="text-2xl font-semibold text-center">إنشاء أو تحديث الكويز</h1>
-
+      {loading ? (
+           <div className="flex w-full justify-center items-center h-screen">
+           <Loader m="md:ml-0" />
+         </div>
+        ) :
       <form
         onSubmit={handleSubmit}
         className="space-y-4 p-6 rounded-lg shadow-md  bg-gray-100 dark:bg-slate-900"
@@ -117,7 +126,7 @@ const FinalQuiz = () => {
           <select
             value={lessonId}
             onChange={(e) => setLessonId(e.target.value)}
-            className="w-full p-3 rounded-lg bg-black dark:text-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full p-3 rounded-lg dark:bg-slate-900 bg-gray-10 dark:text-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-orange-500"
           >
             <option value="" disabled>
               اختر درسًا
@@ -155,7 +164,7 @@ const FinalQuiz = () => {
         >
           إضافة الأسئلة
         </button>
-      </form>
+      </form>}
     </div>
   );
 };

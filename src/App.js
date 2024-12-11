@@ -79,26 +79,21 @@ const AppRoutes = () => {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/readyQuez" element={<ReadyQuez />} />
           <Route path="/startQuez" element={<StartQuez />} />
-           <Route path="/finalQuiz" element={
-            <ProtectedRoute
+           <Route path="/finalQuiz" 
+       
               element={<FinalQuiz />}
-              requiredRole="is_super_admin"
-            />
-          } />
+              
+           
+         />
               <Route path="/questions" element={
             <ProtectedRoute
               element={<Questionss/>}
               requiredRole="is_super_admin"
             />
           } />
-          <Route path="/signup" element={
-            <ProtectedRoute
-              element={<SignUp />}
-              requiredRole="is_super_admin"
-            />
-          } />
+         
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/signup" element={<SignUp />} /> */}
+           <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={<ProtectedRouteUser />}>
             <Route path="" element={<PersonalPage />}>
               <Route path="/information" element={<Portfolio />} />

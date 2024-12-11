@@ -13,11 +13,9 @@ const Lesson3 = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
-   // حالة لتحديد إذا كان المستخدم مسجل دخول أم لا
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
-      // إذا لم يكن هناك accessToken، اعرض رسالة خطأ
       toast.error("قم بتسجيل حساب لتتمكن من مشاهده المحاضرات");
       navigate('/login');
       setIsLoggedIn(false);
@@ -55,21 +53,16 @@ const Lesson3 = () => {
     if (lesson) {
       const enteranceStatus = lesson.enteranceStatus;
       
-      if (enteranceStatus && enteranceStatus.success === true) {
-        localStorage.setItem('lessonId', lessonId);
-        localStorage.setItem('duration', lesson.duration);  // Save duration as well
+      
         
         navigate(`/lesson-video/${lessonId}`, { 
           state: { 
             videoUrl: lesson.video_url, 
             embeded: lesson.embeded,
-            duration: lesson.duration // Pass duration to the video page
+            duration: lesson.duration 
           } 
         });
-      } else {
-        toast.error("لم تتمكن من مشاهده المحاضره الا بعد اداء امتحان المحاضره السابق");
-        navigate('');
-      }
+      
     }
   };
 

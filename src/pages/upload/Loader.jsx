@@ -1,8 +1,8 @@
 import React from "react";
 
-const Loader = () => {
+const Loader = ({m ="md:ml-[900px] ml-0 "}) => {
   return (
-   <div className="w-full md:ml-[900px] ml-0 flex justify-end items-end">
+   <div className={`w-full flex ${m} justify-end items-end`}>
      <svg
       role="status"
       className="inline mr-2 w-20 h-20 text-gray-200 animate-spin dark:text-gray-300 fill-emerald-500"

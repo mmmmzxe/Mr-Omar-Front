@@ -95,7 +95,7 @@ const VideoPage3 = () => {
         ) : videoUrl ? (
           <div>
             <iframe
-              ref={iframeRef} // Reference to the iframe element
+              ref={iframeRef} 
               className={`${styles.howToUse} md:w-[600px] md:h-[350px]`}
               src={videoUrl}
               width="100%"
